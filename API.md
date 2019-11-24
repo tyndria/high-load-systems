@@ -10,8 +10,6 @@ The user wants to *find the nearest trashcan* with particular charactheristics
 If the trashcan doesn't exist on map, *user should have a possibility to add it*.
 We also want to *see the charachteristics* of each trashcan and have the possibility to *edit it*.
 
-...
-
 ## REST
 
 We will use HTTP protocol, which will provide __*statelessness*__ princip of the REST architecture.
@@ -65,7 +63,9 @@ Let's provide an example:
   latitude: number,
   longtitude: number,
   properties: {
-    ...
+    plastic: boolean,
+    glass: boolean,
+    paper: boolean
   }
 }
 ```
@@ -83,7 +83,11 @@ To add new trashcan to the map we will use approximately the following body:
         "type": "Point",
         "coordinates": [-104.99404, 39.75621]
     },
-    "properties": {...}
+    "properties": {
+      plastic: "true",
+      paper: "false",
+      glass: "false"
+    }
 }
 ```
 
