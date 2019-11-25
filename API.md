@@ -1,20 +1,20 @@
 
 # Trashcans
 
-Let's try to create a **RESTful** (or sth near the REST) service.
+Let's try to create __sth near the RESTful__ service.
 
 ## Service goal
 
-The user wants to *find the nearest trashcan* with particular charactheristics
+The user wants to *find the nearest trashcan* with particular characteristics
 
-If the trashcan doesn't exist on map, *user should have a possibility to add it*.
-We also want to *see the charachteristics* of each trashcan and have the possibility to *edit it*.
+If the trashcan doesn't exist on a map, *user should have a possibility to add it*.
+We also want to *see the characteristics* of each trashcan and have the possibility to *edit it*.
 
 ## REST
 
-We will use HTTP protocol, which will provide __*statelessness*__ princip of the REST architecture.
+We will use the HTTP protocol, which will provide __*statelessness*__ principle of the REST architecture.
 
-Since we are going to design basic api let's review __*uniform interface*__ princip more closely.
+Since we are going to design basic API let's review __*uniform interface*__ principle more closely. All other principals like client-server architecture, cacheability, layered system will be covered in the next laboratories.
 
 ## Uniform interface 
 
@@ -24,7 +24,7 @@ We will have the following resources:
 
 We want to:
 1. See the list of the nearest trashcans and filter it.
-2. Add trashcan by its placement.
+2. Add trashcan by its placement with properties.
 3. Modify trashcan properties.
 
 The resources will be identified using URIs.
@@ -71,8 +71,8 @@ Let's provide an example:
 ```
 
 
-To make API RESTful we should provide __self-descriptive messages__ princip.
-Since this API looks like more public then private, we should think about sth more then just JSON representation.
+To make API RESTful we should provide __self-descriptive messages__ principle.
+Since this API looks more public than private, we should think about sth more than just JSON representation.
 
 For example, GeoJSON (https://tools.ietf.org/html/rfc7946).
 To add new trashcan to the map we will use approximately the following body:
@@ -114,16 +114,16 @@ List of the trashcans will look sth like this:
 
 ```
 
-A such representation of the data will help us to provide __self-descriptive messages__ princip of the REST architectural style.
+Such representation of the data will help us to provide __self-descriptive messages__ principle of the REST architectural style.
 
-But what about `Hypermedia as the engine of application state` princip?
+But what about `Hypermedia as the engine of application state` principle?
 
-According to it we don't want client to hard-code the information related to the structure of the application.
-In our case when we're getting the list of the trashcans, I'd like to have an opportunity to edit some trashcan or see some characteristics of it. That's why it would be great to have hyperlink for each particular trashcan in the list.
-According to the GeoJSON we could add this link as a field of `properties`. However, in this case we will lose __self-descriptive messages__ princip a bit. This is an example of __self-descriptive messages__ and __HATEOAS__ 
-principles trade off.
+According to it, we don't want the client to hard-code the information related to the structure of the application.
+In our case when we're getting the list of the trashcans, I'd like to have an opportunity to edit some trashcan or see some characteristics of it. That's why it would be great to have a hyperlink for each particular trashcan on the list.
+According to the GeoJSON, we could add this link as a field of `properties`. However, in this case, we will lose __self-descriptive messages__ principle a bit. This is an example of __self-descriptive messages__ and __HATEOAS__ 
+principles trade-off.
 
-In my opinion, our objects are geo-objects initialy, so I'd like to use **GeoJSON + link field in properties**.
+In my opinion, our objects are geo-objects initially, so I'd like to use **GeoJSON + link field in properties**.
 
 The list of the trashcans will look sth like this:
 ```
@@ -151,3 +151,9 @@ The list of the trashcans will look sth like this:
 }
 
 ```
+
+# Summary
+
+For now, we assume that we don't have problems with __*statelessness, client-server architecture, cacheability, layered system*__ principals while implementing RESTful API.
+
+However, we've noticed  __self-descriptive messages__ and __HATEOAS__ principles trade-off, since GeoJSON doesn't have a fixed property for the trashcan link. It means that's for now out API is close but no the classic REST.
