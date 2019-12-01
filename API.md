@@ -75,40 +75,62 @@ To make API RESTful we should provide __self-descriptive messages__ principle.
 Since this API looks more public than private, we should think about sth more than just JSON representation.
 
 For example, GeoJSON (https://tools.ietf.org/html/rfc7946).
-To add new trashcan to the map we will use approximately the following body:
+__To add new trashcan__ to the map we will use approximately the following body:
 ```
 {
     "type": "Feature",
     "geometry": {
-        "type": "Point",
-        "coordinates": [-104.99404, 39.75621]
+      "type": "Point",
+      "coordinates": "[-104.99404, 39.75621]"
     },
     "properties": {
-      plastic: "true",
-      paper: "false",
-      glass: "false"
+      "plastic": "true",
+      "paper": "false",
+      "glass": "false"
     }
 }
 ```
 
-List of the trashcans will look sth like this:
+__Response__ will look in this way:
+```
+{
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": "[-104.99404, 39.75621]"
+    },
+    "properties": {
+      "plastic: "true",
+      "paper": "false",
+      "glass": "false",
+      "_links": {
+        "self": {
+          "href": "/trashcan/first"
+        }
+      }
+    }
+}
+```
+
+
+__List of the trashcans__ will look sth like this:
 ```
 {
      "type": "FeatureCollection",
      "features": [{
-         "type": "Feature",
-         "geometry": {
-             "type": "Point",
-             "coordinates": [102.0, 0.5]
-         },
-         "properties": {...}
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [102.0, 0.5]
+        },
+        "properties": {...}
      }, {
-         "type": "Feature",
-         "geometry": {
-             "type": "Point",
-             "coordinates": [104.0, 0.5]
-         },
-         "properties": {...}
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [104.0, 0.5]
+        },
+        "properties": {...}
      }, ...]
 }
 
@@ -120,33 +142,71 @@ But what about `Hypermedia as the engine of application state` principle?
 
 According to it, we don't want the client to hard-code the information related to the structure of the application.
 In our case when we're getting the list of the trashcans, I'd like to have an opportunity to edit some trashcan or see some characteristics of it. That's why it would be great to have a hyperlink for each particular trashcan on the list.
+
+Firstly we could think about using `home document` to help the client avoid resource identifiers hardcoding.
+This entry point could look approximately in this way:
+
+```
+{
+  "resources": {
+    "http://cool-minsk/trashcans": {
+      "href": "/trashcans/"
+    },
+    "http://cool-minsk/trashcans": {
+      "href-template": "/trashcans?lat={lat}&lng={lng}&r={r}",
+      "href-vars": {
+        "lat": "http://cool-minsk/param/lat/trashcans",
+        "lng": "http://cool-minsk/param/lng/trashcans",
+        "lr": "http://cool-minsk/param/r/trashcans",
+      },
+    },
+    "http://cool-minsk/trashcan": {
+      "href-template": "/trashcan/{trashcan_id}",
+      "href-vars": {
+        "trashcan_id":  "http://cool-minsk/param/trashcan",
+      },
+    }
+  }
+}
+```
+
+Such an approach allows a server to add new features, control resources clients are using, choose what URLs to use for a given service.
+
 According to the GeoJSON, we could add this link as a field of `properties`. However, in this case, we will lose __self-descriptive messages__ principle a bit. This is an example of __self-descriptive messages__ and __HATEOAS__ 
 principles trade-off.
 
-In my opinion, our objects are geo-objects initially, so I'd like to use **GeoJSON + link field in properties**.
+In my opinion, our objects are geo-objects initially, so I'd like to use **GeoJSON + HAL in properties**.
 
 The list of the trashcans will look sth like this:
 ```
 {
      "type": "FeatureCollection",
      "features": [{
-         "type": "Feature",
-         "geometry": {
-             "type": "Point",
-             "coordinates": [102.0, 0.5]
-         },
-         "properties": {
-             "link": "/trashcan/first"
-         }
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [102.0, 0.5]
+        },
+        "properties": {
+          "_links": {
+            "self": {
+              "href": "/trashcan/first"
+            }
+          }
+        }
      }, {
-         "type": "Feature",
-         "geometry": {
-             "type": "Point",
-             "coordinates": [104.0, 0.5]
-         },
-         "properties": {
-             "link": "/trashcan/second"
-         }
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [104.0, 0.5]
+        },
+        "properties": {
+          "_links": {
+            "self": {
+              "href": "/trashcan/second"
+            }
+          }
+        }
      }, ...]
 }
 
