@@ -1,0 +1,9 @@
+{
+    "service" : {
+        "api" : "http",
+        "port" : 8008
+    },
+    "http" : {
+        "script_names" : [ "/hello_world" ]
+    }
+}
