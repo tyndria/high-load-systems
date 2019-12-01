@@ -78,37 +78,37 @@ For example, GeoJSON (https://tools.ietf.org/html/rfc7946).
 __To add new trashcan__ to the map we will use approximately the following body:
 ```
 {
-    "type": "Feature",
-    "geometry": {
-      "type": "Point",
-      "coordinates": "[-104.99404, 39.75621]"
-    },
-    "properties": {
-      "plastic": "true",
-      "paper": "false",
-      "glass": "false"
-    }
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": "[-104.99404, 39.75621]"
+  },
+  "properties": {
+    "plastic": "true",
+    "paper": "false",
+    "glass": "false"
+  }
 }
 ```
 
 __Response__ will look in this way:
 ```
 {
-    "type": "Feature",
-    "geometry": {
-      "type": "Point",
-      "coordinates": "[-104.99404, 39.75621]"
-    },
-    "properties": {
-      "plastic: "true",
-      "paper": "false",
-      "glass": "false",
-      "_links": {
-        "self": {
-          "href": "/trashcan/first"
-        }
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": "[-104.99404, 39.75621]"
+  },
+  "properties": {
+    "plastic: "true",
+    "paper": "false",
+    "glass": "false",
+    "_links": {
+      "self": {
+        "href": "/trashcan/first"
       }
     }
+  }
 }
 ```
 
@@ -116,22 +116,22 @@ __Response__ will look in this way:
 __List of the trashcans__ will look sth like this:
 ```
 {
-     "type": "FeatureCollection",
-     "features": [{
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [102.0, 0.5]
-        },
-        "properties": {...}
-     }, {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [104.0, 0.5]
-        },
-        "properties": {...}
-     }, ...]
+  "type": "FeatureCollection",
+  "features": [{
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [102.0, 0.5]
+    },
+    "properties": {...}
+  }, {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [104.0, 0.5]
+    },
+    "properties": {...}
+  }, ...]
 }
 
 ```
@@ -180,34 +180,34 @@ In my opinion, our objects are geo-objects initially, so I'd like to use **GeoJS
 The list of the trashcans will look sth like this:
 ```
 {
-     "type": "FeatureCollection",
-     "features": [{
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [102.0, 0.5]
-        },
-        "properties": {
-          "_links": {
-            "self": {
-              "href": "/trashcan/first"
-            }
-          }
+  "type": "FeatureCollection",
+  "features": [{
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [102.0, 0.5]
+    },
+    "properties": {
+      "_links": {
+        "self": {
+          "href": "/trashcan/first"
         }
-     }, {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [104.0, 0.5]
-        },
-        "properties": {
-          "_links": {
-            "self": {
-              "href": "/trashcan/second"
-            }
-          }
+      }
+    }
+  }, {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [104.0, 0.5]
+    },
+    "properties": {
+      "_links": {
+        "self": {
+          "href": "/trashcan/second"
         }
-     }, ...]
+      }
+    }
+  }, ...]
 }
 
 ```
