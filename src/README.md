@@ -5,18 +5,18 @@ How to run server:
 
 The main part is
 ```
-  set $path_info "";  
-	if ( $fastcgi_script_name ~ ^/hello_world(.*)$ ) {  
-      set $path_info $1;  
-	}  
+set $path_info "";  
+if ( $fastcgi_script_name ~ ^/hello_world(.*)$ ) {  
+	set $path_info $1;  
+}  
  	
 
-	location /hello_world {
-      include fastcgi_params;
-      fastcgi_pass unix:/tmp/hello-fcgi-socket;
-      fastcgi_param  SCRIPT_NAME        /hello_world;  
-      fastcgi_param  PATH_INFO          $path_info;  
-	}
+location /hello_world {
+	include fastcgi_params;
+	fastcgi_pass unix:/tmp/hello-fcgi-socket;
+	fastcgi_param  SCRIPT_NAME        /hello_world;  
+	fastcgi_param  PATH_INFO          $path_info;  
+}
 ```
 
 3. See [cppcms config](../src/config)
