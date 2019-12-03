@@ -29,6 +29,8 @@ trashcans::trashcans(cppcms::service &srv): cppcms::application(srv) {
 
   dispatcher().assign("/trashcans", &trashcans::welcome, this);
   mapper().assign("trashcans");
+    
+  mapper().root("/hello_world");
 }
 
 void trashcans::get(std::string lat_str, std::string lng_str, std::string r_str) {
