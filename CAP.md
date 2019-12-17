@@ -18,8 +18,6 @@ __+1 for Availability__
 
 ### 3. Change trashcan's properties
 
-Here we could simplify the situation as well.
-
 In the API description we defines that trashcan has the following properties:
 
 ```
@@ -33,45 +31,29 @@ In the API description we defines that trashcan has the following properties:
 Each of the true value property could mean that it's possible to utilize the trash of this type. 
 If some of this is falsy it means that it's either full or unavailable at all.
 
+There is two possible  cases:
 
-We could imagine that this request is also called by an employee or the trashcan is tracking the state itself.
+- 3.1. Request is called by _an employee or the trashcan_ is tracking the state itself
+
 It means that we will have the only source of this request for particular trashcan. It means no conflicts
-for particular trashcan. Moreover, update of one trashcan doesn't influence other trashcans.
+for particular trashcan. Moreover, update of one trashcan doesn't influence other trashcans, 
+it means that we have consistency at the level of trashcans.
 
-So we don't have a problems with consistency here.
+So we don't have a problems with consistency here, but when sth goes wrong inside trashcan logic
+which is responsible for tracking it state, we could __descrease the availability__,
+since the trashcan is the only one that can do it.
 
-__+1 for Availability__
+So we could consider the second option.
 
+- 3.2. Allow _users_ to update the trashcan state
 
-
-
-
-
-____________________
-
-
-1. What guarantees do we want?
-
-- What do we store?
-We want to read only nearest traschans, we won't give all the list.
-
-Each city is independant => no operations that influence several cities.
-
-Each trashcan is independant. Modification of trashcan won't influence other traschcan properties =>
-consistency at the level of trashcans (atomicity). => no need to store all trashcans toghether.
+Since we won't have to update trashcan on different machines, we won't have a problems with consistency here.
+But the user will always have "almost actual" state of the trashcan.
+We also don't have a  problems with consistency from ACID perspective, since the properties of the trashcan could be either true or false, we can't get negative value or sth like this.
 
 
-- How often do we want to "read"? How often do we want to "write"?
+##  What is better to do
 
-Writing is "traschcan" - the one source of truth. But if the traschcan is broken =>
-repeating the request => alert that there is no connection with traschcan
-We will write to one place, no conflicts on write?
+Let's divide the trashcans by districts / cities. The one machine will simply store the trashcans of particular city / district.
 
-
-Ok, what do we want to do with ONE TRASHCAN?
-
-Consisteny (syncing) -> too long, timeout, but actual data
-Availability is better then consistency because it will take time to reach the trashcan
-
-
-Quick READ
+Each of those machines should have replication to gurantee availability.
