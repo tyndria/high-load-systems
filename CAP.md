@@ -51,9 +51,12 @@ Since we won't have to update trashcan on different machines, we won't have a pr
 But the user will always have "almost actual" state of the trashcan.
 We also don't have a  problems with consistency from ACID perspective, since the properties of the trashcan could be either true or false, we can't get negative value or sth like this.
 
+I prefer to choose the second option.
 
 ##  What is better to do
 
 Let's divide the trashcans by districts / cities. The one machine will simply store the trashcans of particular city / district.
 
 Each of those machines should have replication to gurantee availability.
+
+Data between replication will be synchronized in background (is this a place of inconsistency (or eventual consistency)?).
