@@ -5,7 +5,7 @@
 This request is used by clients and I think that this is the most important and _usable_ request for clients,
 so it's better to __quickly get the data__ even outdated rather than waiting for it a lot of time or repeat request.
 
-__+1 for Availability__
+__+1 for Availability__ + Partition tolerance
 
 ### 2. Add trashcan
 
@@ -14,7 +14,7 @@ It means that we won't have any collisions and it will be easy to merge it.
 
 So this request shouldn't violate consistency since it's not available for usual users.
 
-__+1 for Availability__
+__+1 for Availability__ + Partition tolerance
 
 ### 3. Change trashcan's properties
 
@@ -60,3 +60,5 @@ Let's divide the trashcans by districts/cities. The one machine will simply stor
 Each of those machines should have replication to guarantee availability.
 
 Data between replication will be synchronized in the background (is this a place of inconsistency (or eventual consistency)?).
+
+So the service looks like Availability + Partition tolerance service.
