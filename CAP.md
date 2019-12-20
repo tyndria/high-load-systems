@@ -1,13 +1,13 @@
-## What do we have
+# What do we have
 
-### 1. Retrieve *the nearest* trashcans.
+## 1. Retrieve *the nearest* trashcans.
 
 This request is used by clients and I think that this is the most important and _usable_ request for clients,
 so it's better to __quickly get the data__ rather than waiting for it a lot of time or repeat request.
 
 __+1 for Availability__ + Partition tolerance
 
-### 2. Add trashcan
+## 2. Add trashcan
 
 Let's simplify the task. Let's imagine that trashcan could add only an employee of housing and communal services.
 It means that we won't have any collisions and it will be easy to merge it.
@@ -18,7 +18,7 @@ users can catch the inconsistency of the data before synchronization while viewi
 
 _HERE IS THE ISSUE OF INCONSISTENCY_
 
-### 3. Change trashcan's properties
+## 3. Change trashcan's properties
 
 In the API description we define that trashcan has the following properties:
 
@@ -53,18 +53,18 @@ When the users start to update the trashcan properties it can cause data discrep
 The issue is _HOW TO MERGE DATA_ and _what to do if MACHINES LOST CONNECTION_? What we will show the users on get request?
 
 
-##  What is better to do
+#  What is better to do
 
 
 So the service looks like Availability + Partition tolerance service.
 
-### Cassandra 
+## Cassandra 
 
 __Cassandra isn't good at filtering__?
 
 Let's look at Cassandra database.
 
-#### Replication
+### Replication
 
 It has the two main replication strategies are SimpleStrategy and NetworkTopologyStrategy.
 Let's overview the first one.
@@ -72,7 +72,7 @@ Let's overview the first one.
 It includes `replication_factor` defined the number of nodes that should contain a copy of each row.
 Let's decide that we will have __`replication_factor = 3`__.
 
-#### Consistency
+### Consistency
 
 Cassandra has _consistency levels_ specifying how many of the replicas need to respond in order to consider the operation a success (ONE, TWO, ALL and etc).
 
@@ -83,5 +83,18 @@ Cassandra suggests using this formula `W + R > replication_factor`, where W is t
 > If QUORUM is used for both writes and reads, at least one of the replicas is guaranteed to participate in both the write and the read request,
 > which in turn guarantees that the latest write will be read. 
 
+## Amazon SimpleDB
+
+__Partition__ could me done among _multiple domains_ to parallelize queries and
+have them operate on smaller individual datasets. => Sounds good, data could be splited by place / city / ?.
+
+Data from the same domain will be replicated.
+
+DB supports two read consistency options: __eventually consistent read__ and consistent read.
+
+Eventually consistency reads:
+- stale reads possible;
+- lowest read latency;
+- highest read throughput.
 
 
