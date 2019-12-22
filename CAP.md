@@ -58,37 +58,16 @@ The issue is _HOW TO MERGE DATA_ and _what to do if MACHINES LOST CONNECTION_? W
 
 So the service looks like Availability + Partition tolerance service.
 
-## Cassandra 
-
-__Cassandra isn't good at filtering__?
-
-Let's look at Cassandra database.
-
-### Replication
-
-It has the two main replication strategies are SimpleStrategy and NetworkTopologyStrategy.
-Let's overview the first one.
-
-It includes `replication_factor` defined the number of nodes that should contain a copy of each row.
-Let's decide that we will have __`replication_factor = 3`__.
-
-### Consistency
-
-Cassandra has _consistency levels_ specifying how many of the replicas need to respond in order to consider the operation a success (ONE, TWO, ALL and etc).
-
-_Write operations are always sent to all replicas_, regardless of consistency level. 
-
-Cassandra suggests using this formula `W + R > replication_factor`, where W is the write consistency level, R is the read consistency level.
-
-> If QUORUM is used for both writes and reads, at least one of the replicas is guaranteed to participate in both the write and the read request,
-> which in turn guarantees that the latest write will be read. 
-
 ## Amazon SimpleDB
 
 __Partition__ could me done among _multiple domains_ to parallelize queries and
-have them operate on smaller individual datasets. => Sounds good, data could be splited by place / city / ?.
+have them operate on smaller individual datasets.
 
-Data from the same domain will be replicated.
+It seems that it's a good option for us, because we could use different domains for different areas/cities.
+We don't need to complete requests from different domains and we could provide high availability since
+data from the same domain will be replicated. 
+In the unlikely event that one replica fails, Amazon SimpleDB can failover to another replica in the system.
+
 
 DB supports two read consistency options: __eventually consistent read__ and consistent read.
 
@@ -97,4 +76,6 @@ Eventually consistency reads:
 - lowest read latency;
 - highest read throughput.
 
-
+Regarding the question of data conflict, when two users update the same entity (user_1_update, user_2_update) and then read,
+SimpleDB says that the return could any results: user_1_update, user_2_update or no results.
+But eventually consistency across all copies of the data is __usually__ reached within a second, so maybe it's not a big problem.
