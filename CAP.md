@@ -41,7 +41,7 @@ It means that we will have the only source of this request for a particular tras
 for a particular trashcan. Moreover, an update of one trashcan doesn't influence other trashcans, 
 it means that we have consistency at the level of trashcans.
 
-So we don't have problems with consistency here, but when sth goes wrong inside trashcan logic
+But when sth goes wrong inside trashcan logic
 which is responsible for tracking its state, we could __descrease the availability__,
 since the trashcan is the only one that can do it.
 
@@ -60,25 +60,39 @@ So the service looks like Availability + Partition tolerance service.
 
 ## Amazon SimpleDB
 
-__Partition__ could be done among _multiple domains_ to parallelize queries and
-have them operate on smaller individual datasets.
+__Partition__ will be done among _multiple domains_: in our case one domain in one city/area.
 
-It seems that it's a good option for us because we could use different domains for different areas/cities.
-We don't need to complete requests from different domains and we could provide high availability since
-data from the same domain will be replicated. 
-In the unlikely event that one replica fails, Amazon SimpleDB can failover to another replica in the system.
+The main characteristics of domain:
+- data inside the single domain is __replicated__ -> _availability_ for each domain;
+- we aren't allowed to make cross-domain requests  -> that's ok, we don't need this;
+- write is consistent for each domain.
+
+In the unlikely event that one replica fails, SimpleDB can failover to another replica in the system.
 
 
-DB supports two read consistency options: __eventually consistent read__ and consistent read.
+DB supports two read consistency options: __eventually consistent__ read and __consistent__ read.
 
-Eventually consistency reads:
-- stale reads possible;
-- lowest read latency;
-- highest read throughput.
+These are the statements from documentation:
+> An eventually consistent read __might not reflect the results of a recently completed write__.
+> Consistency across all copies of the data is usually _reached within a second_;
 
-Regarding the question of data conflict, when two users update the same entity (user_1_update, user_2_update) and then read,
-SimpleDB says that the return result could be any: user_1_update, user_2_update or no results. It seems that we will have the same for the trashcan
-post request.
-But eventually consistency across all copies of the data is __usually__ reached within a second, so maybe it's not a big problem.
+> A consistent read returns a result that reflects all writes that received a successful response prior to the read.
 
-Amazon also suggests implementing some concurrent control mechanism, such as timestamp ordering, to ensure we are getting the data we want, so it seems that it will be the main factor while merging the data conflicts.
+
+So let's review the cases of reading the data:
+
+1. It seems that for __GET__ request of _particular trashcan_ we could use __consistent__ read to see a result that reflects all writes that received a successful response prior to the read. Because we'd like to make this request before changing the trashcan properties.
+
+2. For the __GET__ request of _the list of trashcans_ we could use __eventually consistent__ read, since reaching the trashcan will take some
+time anyway, so it's not essential to get the 100% actual data.
+
+
+When the users _update the entity_ simultaneously we could use _optimistic concurrency control_ by maintaining a version number (or timestamp) attribute as part of an item and by performing a conditional update based on the value of this version number.
+This mechanism is implemented using __conditional put__.
+
+
+Retrieng _POST_ requests:
+SimpleDB hs `itemName` field for the each item which should be unique. 
+We can generate itemName value based on the coordinates / area identifier, so there couldn't be two trashcans inside one area or
+with the same coordinates. It means that we won't be able to add two trashcans with the same coordinates / area identifier.
+
