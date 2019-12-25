@@ -60,19 +60,19 @@ So the service looks like Availability + Partition tolerance service.
 
 ## Amazon SimpleDB
 
-__Partition__ will be done among _multiple domains_: in our case one domain in one city/area.
+__Partition__ will be done among _multiple domains_: in our case, one domain is one city/area.
 
-The main characteristics of domain:
+The main characteristics of the domain:
 - data inside the single domain is __replicated__ -> _availability_ for each domain;
 - we aren't allowed to make cross-domain requests  -> that's ok, we don't need this;
 - write is consistent for each domain.
 
 In the unlikely event that one replica fails, SimpleDB can failover to another replica in the system.
-
+_______
 
 DB supports two read consistency options: __eventually consistent__ read and __consistent__ read.
 
-These are the statements from documentation:
+These are the statements from the documentation:
 > An eventually consistent read __might not reflect the results of a recently completed write__.
 > Consistency across all copies of the data is usually _reached within a second_;
 
@@ -86,13 +86,32 @@ So let's review the cases of reading the data:
 2. For the __GET__ request of _the list of trashcans_ we could use __eventually consistent__ read, since reaching the trashcan will take some
 time anyway, so it's not essential to get the 100% actual data.
 
+______
 
-When the users _update the entity_ simultaneously we could use _optimistic concurrency control_ by maintaining a version number (or timestamp) attribute as part of an item and by performing a conditional update based on the value of this version number.
+
+When the users _update the entity_ simultaneously it's possible to use _optimistic concurrency control_ by maintaining a timestamp attribute as part of an item and by performing a conditional update based on the value of the timestamp.
+
 This mechanism is implemented using __conditional put__.
 
+It means that if the User B changes sth between write and read action
+during User A update, the update of User A will fail.
 
-Retrieng _POST_ requests:
-SimpleDB hs `itemName` field for the each item which should be unique. 
-We can generate itemName value based on the coordinates / area identifier, so there couldn't be two trashcans inside one area or
+__However__, I'm not sure that we really need it because trashcan properties have a boolean type.
+
+If the User A wants to change `plastic` property from `false` to `true`, 
+I don't think it's a problem when someone will change it to `true` or `false` before the write action of A, the result will be the same.
+
+So I'm not sure that we should crash users' requests because it seems that this situation is not common for this service and users can't set custom values for trashcan properties.
+
+______
+
+SimpleDB suggests to retry requests on _server errors_.
+
+It's could be problematic for _POST_ requests since
+having two database entities for the one trashcan could be confusing
+for the users.
+
+We could think about the following idea:
+SimpleDB has `itemName` field for each item which should be unique. 
+We can generate itemName value based on the coordinates/area identifier, so there wouldn't be two trashcans inside one area or
 with the same coordinates. It means that we won't be able to add two trashcans with the same coordinates / area identifier.
-
