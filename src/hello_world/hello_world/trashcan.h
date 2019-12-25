@@ -9,23 +9,15 @@
 #ifndef trashcan_h
 #define trashcan_h
 
+#include <cppcms/application.h>
+#include <cppcms/service.h>
 
-struct TrashcanProperties {
-    bool plastic;
-    bool paper;
-    bool glass;
+#include <stdio.h>
+
+class trashcan: public cppcms::application {
+public:
+    trashcan(cppcms::service &srv);
+    void add();
 };
 
-struct TrashcanGeometry {
-    std::string type;
-    std::vector<double> coordinates;
-};
-
-// TODO: add links to properties?
-struct Trashcan {
-    std::string type;
-    TrashcanGeometry geometry;
-    TrashcanProperties properties;
-};
-
-#endif /* trashcan_h*/
+#endif /* trashcan_h */

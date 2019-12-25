@@ -10,7 +10,8 @@
 		1A170474238EDFD6006726E1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A170473238EDFD6006726E1 /* main.cpp */; };
 		1A47E8C62392C2330085C93A /* libgeojson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A47E8C22392BF3C0085C93A /* libgeojson.a */; };
 		1ACF5E8A2393C6E600FF6864 /* trashcans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF5E892393C6E600FF6864 /* trashcans.cpp */; };
-		1AE237BA23B392CC00FB2371 /* trashcan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AE237B823B392CC00FB2371 /* trashcan.cpp */; };
+		1AE237BA23B392CC00FB2371 /* trashcan_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AE237B823B392CC00FB2371 /* trashcan_model.cpp */; };
+		1AE237BD23B3DE3900FB2371 /* trashcan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AE237BB23B3DE3900FB2371 /* trashcan.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,8 +33,10 @@
 		1A47E8C42392BF510085C93A /* geojson.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = geojson.o; path = "../../../../../../usr/local/Cellar/geojson-cpp/build/geojson.o"; sourceTree = "<group>"; };
 		1A47E8C72393C6010085C93A /* trashcans.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trashcans.h; sourceTree = "<group>"; };
 		1ACF5E892393C6E600FF6864 /* trashcans.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trashcans.cpp; sourceTree = "<group>"; };
-		1AE237B823B392CC00FB2371 /* trashcan.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trashcan.cpp; sourceTree = "<group>"; };
-		1AE237B923B392CC00FB2371 /* trashcan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trashcan.h; sourceTree = "<group>"; };
+		1AE237B823B392CC00FB2371 /* trashcan_model.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trashcan_model.cpp; sourceTree = "<group>"; };
+		1AE237B923B392CC00FB2371 /* trashcan_model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trashcan_model.h; sourceTree = "<group>"; };
+		1AE237BB23B3DE3900FB2371 /* trashcan.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trashcan.cpp; sourceTree = "<group>"; };
+		1AE237BC23B3DE3900FB2371 /* trashcan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trashcan.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,11 +71,12 @@
 		1A170472238EDFD6006726E1 /* hello_world */ = {
 			isa = PBXGroup;
 			children = (
+				1AE237BE23B3DE7B00FB2371 /* models */,
 				1A170473238EDFD6006726E1 /* main.cpp */,
 				1A47E8C72393C6010085C93A /* trashcans.h */,
 				1ACF5E892393C6E600FF6864 /* trashcans.cpp */,
-				1AE237B823B392CC00FB2371 /* trashcan.cpp */,
-				1AE237B923B392CC00FB2371 /* trashcan.h */,
+				1AE237BB23B3DE3900FB2371 /* trashcan.cpp */,
+				1AE237BC23B3DE3900FB2371 /* trashcan.h */,
 			);
 			path = hello_world;
 			sourceTree = "<group>";
@@ -84,6 +88,15 @@
 				1A47E8C22392BF3C0085C93A /* libgeojson.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1AE237BE23B3DE7B00FB2371 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				1AE237B823B392CC00FB2371 /* trashcan_model.cpp */,
+				1AE237B923B392CC00FB2371 /* trashcan_model.h */,
+			);
+			path = models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -144,8 +157,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A170474238EDFD6006726E1 /* main.cpp in Sources */,
+				1AE237BD23B3DE3900FB2371 /* trashcan.cpp in Sources */,
 				1ACF5E8A2393C6E600FF6864 /* trashcans.cpp in Sources */,
-				1AE237BA23B392CC00FB2371 /* trashcan.cpp in Sources */,
+				1AE237BA23B392CC00FB2371 /* trashcan_model.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

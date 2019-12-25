@@ -17,7 +17,7 @@
 #include <string>
 #include <fstream>
 
-#include "trashcan.h"
+#include "models/trashcan_model.h"
 #include "trashcans.h"
 
 
@@ -26,7 +26,6 @@ using namespace mapbox::geometry;
 trashcans::trashcans(cppcms::service &srv): cppcms::application(srv) {
     dispatcher().assign("/trashcans/lat/(\\d+)/lng/(\\d+)/r/(\\d+)", &trashcans::get, this, 1, 2, 3);
     mapper().assign("get", "/trashcans/lat/{1}/lng/{2}/r/{3}");
-
 
     dispatcher().assign("/trashcans", &trashcans::welcome, this);
     mapper().assign("trashcans");
