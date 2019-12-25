@@ -1,8 +1,6 @@
 #include <cppcms/service.h>
 #include <cppcms/applications_pool.h>
 
-#include <mapbox/geometry.hpp>
-
 #include <iostream>
 
 #include "trashcans.h"

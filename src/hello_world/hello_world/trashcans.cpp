@@ -17,31 +17,47 @@
 #include <string>
 #include <fstream>
 
+#include "trashcan.h"
 #include "trashcans.h"
 
 
 using namespace mapbox::geometry;
 
 trashcans::trashcans(cppcms::service &srv): cppcms::application(srv) {
-  dispatcher().assign("/trashcans/lat/(\\d+)/lng/(\\d+)/r/(\\d+)", &trashcans::get, this, 1, 2, 3);
-  mapper().assign("get", "/trashcans/lat/{1}/lng/{2}/r/{3}");
+    dispatcher().assign("/trashcans/lat/(\\d+)/lng/(\\d+)/r/(\\d+)", &trashcans::get, this, 1, 2, 3);
+    mapper().assign("get", "/trashcans/lat/{1}/lng/{2}/r/{3}");
 
 
-  dispatcher().assign("/trashcans", &trashcans::welcome, this);
-  mapper().assign("trashcans");
+    dispatcher().assign("/trashcans", &trashcans::welcome, this);
+    mapper().assign("trashcans");
     
     mapper().root("/hello_world");
 }
 
 void trashcans::get(std::string lat_str, std::string lng_str, std::string r_str) {
-  int lat = atoi(lat_str.c_str());
-  int lng = atoi(lng_str.c_str());
-  
-  point<double> pt(lat, lng);
-  response().out() << "The ONE POINT IS " << pt.x << " " << pt.y << "<br/>\n";
+    std::string trash_str = "{ \
+        \"type\": \"Feature\",\
+        \"geometry\": { \
+            \"type\": \"Point\", \
+            \"coordinates\": \"[-104.99404, 39.75621]\" \
+        }, \
+        \"properties\": { \
+            \"plastic\": \"true\", \
+            \"paper\": \"false\", \
+            \"glass\": \"false\" \
+        } \
+    }";
+    
+    cppcms::json::value trash_obj;
+    std::stringstream ss;
+    ss << trash_str;
+    
+    trash_obj.load(ss, true);
+    
+    response().out() << trash_obj;
 };
 
 void trashcans::welcome() {
-  response().out() << "<h1> Welcome To Page with links </h1>\n"
-   "<a href='" << url("/get", 1, 2, 3)  << "'>See trashcans filtering</a><br>\n";
+    response().out() << "<h1> Welcome To Page with links </h1>\n"
+    "<a href='" << url("/get", 1, 2, 3)  << "'>See trashcans filtering</a><br>\n";
 };

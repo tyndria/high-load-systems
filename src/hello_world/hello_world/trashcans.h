@@ -13,6 +13,9 @@
 #include <cppcms/service.h>
 
 
+#include <mapbox/geometry.hpp>
+
+
 using namespace mapbox::geometry;
 
 
