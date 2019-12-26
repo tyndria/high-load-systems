@@ -1,22 +1,42 @@
-1. Найдем оптимальное значение rps
+1. Find "optimal" rps value
 
-Проведем сначала тест при увеличении rps от 10 до 1000 в течение 10 минут.
-Для мониторинга использования памяти и процессора используем утилиту `psrecord`.
+Conduct a test with the following schedule `line(10, 3000, 15m)`.
 
-Тест в Яндекс.Танк: https://overload.yandex.net/online/239675
+`psrecord` was used to record memory and cpu utilization.
 
-Мониторинг CPU / Memory:
+Yandex.Tank test: https://overload.yandex.net/online/239951
+
+CPU & memory:
 
 ![Alt text](/images/plot1.png?raw=true)
 
-Разладка сервиса наступае при ...
+The response increased after __~500 rps__. According to the `psrecord` 
+it seems that _cpu_ plot has several critical moments.
 
-2. Проведем тестирование при оптимальном значении
+2. Test "optimal" rps value
 
-line(10, 300, 3m) const(300, 12m)
+Let's choose __300 rps__ as optimal value.
 
-Тест в Яндекс.Танк: https://overload.yandex.net/online/239684
+`line(10, 300, 3m) const(300, 15m)`
 
-Мониторинг CPU / Memory:
+Yandex.Tank test: https://overload.yandex.net/online/239957
 
+CPU & memory:
+ 
 ![Alt text](/images/plot2.png?raw=true)
+
+It's quite difficult to assess this test because response time is bad since the beginning of the test. There were a tests when the service worked fine with 300 rps, for example, this one https://overload.yandex.net/239684.
+
+Let's try to edit nginx config, set `worker_processes  4` and run 
+the previous test again.
+
+Yandex.Tank test: https://overload.yandex.net/online/239961
+
+![Alt text](/images/plot3.png?raw=true)
+
+The response time looks much more better, approximately average response time is 50 ms.
+
+Unfortunately I don't see significant changes on psrecord charts.
+
+
+
