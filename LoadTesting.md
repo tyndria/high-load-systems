@@ -10,7 +10,7 @@ CPU & memory:
 
 ![Alt text](/images/plot1.png?raw=true)
 
-The response increased after __~500 rps__. According to the `psrecord` 
+The response time increased after __~500 rps__. According to the `psrecord` 
 it seems that _cpu_ plot has several critical moments.
 
 2. Test "optimal" rps value
@@ -36,7 +36,4 @@ Yandex.Tank test: https://overload.yandex.net/online/239961
 
 The response time looks much more better, approximately average response time is 50 ms.
 
-Unfortunately I don't see significant changes on psrecord charts.
-
-
-
+Unfortunately I don't see significant changes on psrecord charts. The memory usage is approximately the same, the cpu usage changes, but the average metric value is approximately the same as well.
