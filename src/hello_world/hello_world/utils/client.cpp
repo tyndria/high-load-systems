@@ -14,6 +14,12 @@
 #include "../utils/hmac.h"
 
 
+#define LATITUDE_MAX_DIGITS 2
+#define LONGTITUDE_MAX_DIGITS 3
+#define LATITUDE_PADDING 90
+#define LONGTITUDE_PADDING 180
+
+
 std::string timestamp() {
     time_t raw_time = std::time(nullptr);
     struct tm *info;
@@ -25,6 +31,16 @@ std::string timestamp() {
     strftime(iso_time, sizeof(iso_time), "%Y-%m-%dT%H:%M:%SZ", info);
     
     return std::string(iso_time);
+}
+
+std::string add_padding(std::string s, int max_digits_number) {
+    std::string::size_type pos = s.find(".");
+    int digits_num = static_cast<int>(pos);
+    
+    int padding_size = std::max(0, max_digits_number - digits_num);
+    std::string padding = std::string(padding_size, '0');
+    
+    return padding + s;
 }
 
 
@@ -39,22 +55,44 @@ Client::Client(const std::string &access_key, const std::string &secret_key, con
 }
 
 std::string Client::Add(trashcan trashcan) {
-    std::string coordinates = std::to_string(trashcan.coordinates[0]) + "," + std::to_string(trashcan.coordinates[1]);
+    double latitute = trashcan.coordinates[0] + LATITUDE_PADDING;
+    double longtitude = trashcan.coordinates[1] + LONGTITUDE_PADDING;
+    
+    std::string coordinates = std::to_string(latitute) + "," + std::to_string(longtitude);
     std::string trash_name = "trash_" + coordinates;
+
     
     QueryParams params = {
         QueryParam("AWSAccessKeyId", access_key_),
         QueryParam("Action", "PutAttributes"),
-        QueryParam("Attribute.1.Name", "coordinates"),
-        QueryParam("Attribute.1.Value", coordinates),
-        QueryParam("Attribute.2.Name", "plastic"),
-        QueryParam("Attribute.2.Value", trashcan.plastic ? "true": "false"),
-        QueryParam("Attribute.3.Name", "paper"),
-        QueryParam("Attribute.3.Value", trashcan.paper ? "true": "false"),
-        QueryParam("Attribute.4.Name", "glass"),
-        QueryParam("Attribute.4.Value", trashcan.glass ? "true": "false"),
+        QueryParam("Attribute.1.Name", "lat"),
+        QueryParam("Attribute.1.Value", add_padding(std::to_string(latitute), LATITUDE_MAX_DIGITS)),
+        QueryParam("Attribute.2.Name", "long"),
+        QueryParam("Attribute.2.Value", add_padding(std::to_string(longtitude), LONGTITUDE_MAX_DIGITS)),
+        QueryParam("Attribute.3.Name", "plastic"),
+        QueryParam("Attribute.3.Value", trashcan.plastic ? "true": "false"),
+        QueryParam("Attribute.4.Name", "paper"),
+        QueryParam("Attribute.4.Value", trashcan.paper ? "true": "false"),
+        QueryParam("Attribute.5.Name", "glass"),
+        QueryParam("Attribute.5.Value", trashcan.glass ? "true": "false"),
         QueryParam("DomainName", "urucca"),
         QueryParam("ItemName", trash_name),
+        QueryParam("SignatureMethod", "HmacSHA256"),
+        QueryParam("SignatureVersion", "2"),
+        QueryParam("Timestamp", timestamp()),
+        QueryParam("Version", "2009-04-15")
+    };
+    
+    return MakeRequest(params);
+}
+
+std::string Client::GetNearest(double lat, double lang) {
+    std::string exp ="select * from urucca where lat > '40' and long < '240'";
+    
+    QueryParams params = {
+        QueryParam("AWSAccessKeyId", access_key_),
+        QueryParam("Action", "Select"),
+        QueryParam("SelectExpression", exp),
         QueryParam("SignatureMethod", "HmacSHA256"),
         QueryParam("SignatureVersion", "2"),
         QueryParam("Timestamp", timestamp()),

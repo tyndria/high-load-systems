@@ -10,12 +10,7 @@
 #define trashcans_h
 
 #include <cppcms/application.h>
-
-#include <mapbox/geometry.hpp>
-
-
-using namespace mapbox::geometry;
-
+#include "../utils/client.h"
 
 class trashcans: public cppcms::application {
 public:
@@ -23,6 +18,9 @@ public:
     void get(std::string lat_str, std::string lng_str, std::string r_str);
     void welcome();
     void add();
+    void prepend_cors_headers();
+private:
+    Client * client;
 };
 
 

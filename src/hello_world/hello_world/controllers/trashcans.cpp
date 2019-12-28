@@ -21,9 +21,6 @@
 
 #include "../models/trashcan.h"
 
-#include "../utils/hmac.h"
-#include "../utils/client.h"
-
 using namespace mapbox::geometry;
 
 cppcms::json::value parse_body(const std::pair<void *, size_t> &post_data) {
@@ -42,6 +39,8 @@ cppcms::json::value parse_body(const std::pair<void *, size_t> &post_data) {
 }
 
 trashcans::trashcans(cppcms::service &srv): cppcms::application(srv) {
+    client = new Client("AKIA4A5DKQCYPBQP4SWY", "", "sdb.amazonaws.com");
+    
     dispatcher().assign("/trashcans/lat/(\\d+)/lng/(\\d+)/r/(\\d+)", &trashcans::get, this, 1, 2, 3);
     mapper().assign("get", "/trashcans/lat/{1}/lng/{2}/r/{3}");
 
@@ -55,42 +54,22 @@ trashcans::trashcans(cppcms::service &srv): cppcms::application(srv) {
 }
 
 void trashcans::get(std::string lat_str, std::string lng_str, std::string r_str) {
-    std::string trash_str = "{ \
-        \"type\": \"Feature\",\
-        \"geometry\": { \
-            \"type\": \"Point\", \
-            \"coordinates\": \"[-104.99404, 39.75621]\" \
-        }, \
-        \"properties\": { \
-            \"plastic\": \"true\", \
-            \"paper\": \"false\", \
-            \"glass\": \"false\" \
-        } \
-    }";
+    prepend_cors_headers();
     
-    cppcms::json::value trash_obj;
-    std::stringstream ss;
-    ss << trash_str;
-    
-    trash_obj.load(ss, true);
-    
-    response().out() << trash_obj;
+    if (request().request_method() == "GET") {
+        std::string result = client->GetNearest(1, 2);
+            
+        response().out() << result;
+    }
 };
 
 void trashcans::add() {
-    response().set_header("Access-Control-Allow-Origin", "*");
-    response().set_header("Access-Control-Allow-Headers", "accept,Content-Type");
-    response().set_header("Access-Control-Allow-Methods",
-                          "GET,POST,PATCH,DELETE");
-    response().set_content_header("application/json");
-    
+    prepend_cors_headers();
     
     if (request().request_method() == "POST") {
         cppcms::json::value t = parse_body(request().raw_post_data());
         
-        Client client("AKIA4A5DKQCYPBQP4SWY", "", "sdb.amazonaws.com");
-        
-        std::string result = client.Add(t.get_value<trashcan>());
+        std::string result = client->Add(t.get_value<trashcan>());
             
         response().out() << result;
     }
@@ -99,3 +78,11 @@ void trashcans::add() {
 void trashcans::welcome() {
     response().out() << "<h1> Welcome </h1>\n";
 };
+
+void trashcans::prepend_cors_headers() {
+    response().set_header("Access-Control-Allow-Origin", "*");
+    response().set_header("Access-Control-Allow-Headers", "accept,Content-Type");
+    response().set_header("Access-Control-Allow-Methods",
+                        "GET,POST,PATCH,DELETE");
+    response().set_content_header("application/json");
+}

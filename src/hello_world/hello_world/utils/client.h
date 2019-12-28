@@ -28,6 +28,7 @@ public:
     Client(const std::string &access_key, const std::string &secret_key, const std::string endpoint);
     
     std::string Add(trashcan trashcan);
+    std::string GetNearest(double lat, double lang);
  private:
     std::string MakeRequest(QueryParams query_params);
     
