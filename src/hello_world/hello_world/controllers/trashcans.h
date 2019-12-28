@@ -10,8 +10,6 @@
 #define trashcans_h
 
 #include <cppcms/application.h>
-#include <cppcms/service.h>
-
 
 #include <mapbox/geometry.hpp>
 
@@ -24,6 +22,7 @@ public:
     trashcans(cppcms::service &srv);
     void get(std::string lat_str, std::string lng_str, std::string r_str);
     void welcome();
+    void add();
 };
 
 
