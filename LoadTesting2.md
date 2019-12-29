@@ -40,4 +40,4 @@ schedule: line(10, 100, 3m) const(100, 10m)
 
 ![Alt text](/images/plot3.png?raw=true)
 
-This chart looks better, however, the service became unstable after 8 minutes.
+This Tank test looks better, however, the service became unstable after 8 minutes.
