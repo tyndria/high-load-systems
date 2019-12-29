@@ -38,8 +38,8 @@ cppcms::json::value parse_body(const std::pair<void *, size_t> &post_data) {
 trashcans::trashcans(cppcms::service &srv): cppcms::application(srv) {
     client = new Client("AKIA4A5DKQCYPBQP4SWY", getenv("SECRET_KEY"), "sdb.amazonaws.com");
     
-    dispatcher().assign("/trashcans/lat/(\\d+)/lng/(\\d+)/r/(\\d+)", &trashcans::list, this, 1, 2, 3);
-    mapper().assign("get", "/trashcans/lat/{1}/lng/{2}/r/{3}");
+    dispatcher().assign("/trashcans/lat/(\\d+)/lng/(\\d+)", &trashcans::list, this, 1, 2);
+    mapper().assign("get", "/trashcans/lat/{1}/lng/{2}");
 
     dispatcher().assign("/trashcans", &trashcans::welcome, this);
     mapper().assign("trashcans");
@@ -50,11 +50,11 @@ trashcans::trashcans(cppcms::service &srv): cppcms::application(srv) {
     mapper().root("/hello_world");
 }
 
-void trashcans::list(std::string lat_str, std::string lng_str, std::string r_str) {
+void trashcans::list(std::string lat_str, std::string lng_str) {
     prepend_cors_headers();
     
     if (request().request_method() == "GET") {
-        std::string result = client->GetNearest(std::stod(lat_str), std::stod(lng_str), std::stod(r_str));
+        std::string result = client->GetNearest(std::stod(lat_str), std::stod(lng_str));
        
         response().out() << result;
     }

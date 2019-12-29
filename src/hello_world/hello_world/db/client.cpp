@@ -13,8 +13,6 @@
 #include "../utils/hmac.h"
 
 
-
-
 Client::Client(const std::string &access_key, const std::string &secret_key, const std::string endpoint)
     : access_key_(access_key), endpoint_(endpoint), secret_key_(secret_key) {}
 
@@ -63,18 +61,18 @@ std::string Client::PatchOne(cppcms::json::value const &v) {
 }
 
 std::string Client::AddOne(Trashcan trashcan) {
-    std::string latitude = format_number(trashcan.coordinates[0], LATITUDE_PADDING, LATITUDE_MAX_DIGITS);
-    std::string longtitude = format_number(trashcan.coordinates[1], LONGTITUDE_PADDING, LONGTITUDE_MAX_DIGITS);
+    std::string lat = format_number(trashcan.coordinates[0], LATITUDE_PADDING, LATITUDE_MAX_DIGITS);
+    std::string lng = format_number(trashcan.coordinates[1], LONGTITUDE_PADDING, LONGTITUDE_MAX_DIGITS);
     
-    std::string trash_name = "trash_" + latitude + longtitude;
+    std::string trash_name = "trash_" + lat + lng;
 
     QueryParams params = {
         QueryParam("AWSAccessKeyId", access_key_),
         QueryParam("Action", "PutAttributes"),
         QueryParam("Attribute.1.Name", "lat"),
-        QueryParam("Attribute.1.Value", latitude),
-        QueryParam("Attribute.2.Name", "long"),
-        QueryParam("Attribute.2.Value", longtitude),
+        QueryParam("Attribute.1.Value", lat),
+        QueryParam("Attribute.2.Name", "lng"),
+        QueryParam("Attribute.2.Value", lng),
         QueryParam("Attribute.3.Name", "plastic"),
         QueryParam("Attribute.3.Value", bool_to_string(trashcan.plastic)),
         QueryParam("Attribute.4.Name", "paper"),
@@ -92,12 +90,25 @@ std::string Client::AddOne(Trashcan trashcan) {
     return MakeRequest(params);
 }
 
-std::string Client::GetNearest(double lat, double lng, double r) {
-    std::string latitude = format_number(lat, LATITUDE_PADDING, LATITUDE_MAX_DIGITS);
-    std::string longtitude = format_number(lng, LONGTITUDE_PADDING, LONGTITUDE_MAX_DIGITS);
+std::string Client::GetNearest(double lat, double lng) {
+    // TODO: Unreal calculations, just an example
+    double r = 15;
     
-    // TODO: just random formula, ure real calculations
-    std::string exp ="select * from urucca where lat > '" + latitude + "' and long < '" + longtitude +"'";
+    std::string lat_minus_r = format_number(lat - r, LATITUDE_PADDING, LATITUDE_MAX_DIGITS);
+    std::string lat_plus_r = format_number(lat + r, LATITUDE_PADDING, LATITUDE_MAX_DIGITS);
+    
+    
+    std::string lng_minus_r = format_number(lng - r, LONGTITUDE_PADDING, LONGTITUDE_MAX_DIGITS);
+    std::string lng_plus_r = format_number(lng + r, LONGTITUDE_PADDING, LONGTITUDE_MAX_DIGITS);
+    
+    std::stringstream exp_ss;
+    exp_ss
+        << "select * from urucca where lat > '" << lat_minus_r
+        << "' and lat < '" << lat_plus_r
+        << "' and lng > '" << lng_minus_r
+    << "' and lng < '" << lng_plus_r << "'";
+    
+    std::string exp = exp_ss.str();
     
     QueryParams params = {
         QueryParam("AWSAccessKeyId", access_key_),

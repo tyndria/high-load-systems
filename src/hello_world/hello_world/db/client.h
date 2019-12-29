@@ -33,7 +33,7 @@ public:
     Client(const std::string &access_key, const std::string &secret_key, const std::string endpoint);
     
     std::string AddOne(Trashcan trashcan);
-    std::string GetNearest(double lat, double lng, double r);
+    std::string GetNearest(double lat, double lng);
     std::string PatchOne(cppcms::json::value const &v);
  private:
     std::string MakeRequest(QueryParams query_params);

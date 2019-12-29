@@ -28,9 +28,9 @@ namespace cppcms {
                   throw bad_value_cast();
               }
               
-              t.plastic = v.get<bool>("plastic");
-              t.glass = v.get<bool>("glass");
-              t.paper = v.get<bool>("paper");
+              t.plastic = v.get<bool>("properties.plastic");
+              t.glass = v.get<bool>("properties.glass");
+              t.paper = v.get<bool>("properties.paper");
               t.coordinates = v.get<std::vector<double>>("geometry.coordinates");
               return t;
           }

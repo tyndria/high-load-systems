@@ -16,7 +16,7 @@ class trashcans: public cppcms::application {
 public:
     trashcans(cppcms::service &srv);
     void welcome();
-    void list(std::string lat_str, std::string lng_str, std::string r_str);
+    void list(std::string lat_str, std::string lng_str);
     void one();
     void prepend_cors_headers();
 private:
