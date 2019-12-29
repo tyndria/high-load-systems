@@ -1,7 +1,7 @@
 
 Open questions:
 
-1. Why there is http_0 status and what does it mean?
+1. Why there is http_0 status and what does it mean in the context of my service
 2. Sometimes I'm getting protocol error
 
 1. Let's test GET NEAREST request
@@ -40,7 +40,3 @@ schedule: line(10, 100, 3m) const(100, 10m)
 ![Alt text](/images/plot3.png?raw=true)
 
 This chart looks better, however, the service became unstable after 8 minutes.
-
-
-
-
