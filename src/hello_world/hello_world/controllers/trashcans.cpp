@@ -6,7 +6,7 @@
 //  Copyright © 2019 avertsinskaya. All rights reserved.
 //
 #include <cppcms/json.h>
-#include <cppcms/application.h>
+
 #include <cppcms/http_request.h>
 #include <cppcms/http_response.h>
 #include <cppcms/url_dispatcher.h>

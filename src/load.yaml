@@ -5,10 +5,10 @@ overload:
 phantom:
   address: docker.for.mac.localhost:8080 # [Target's address]:[target's port]
   uris:
-    - /hello_world/trashcans/lat/1/lng/2/r/3
+    - /hello_world/trashcans/lat/5/lng/5
   load_profile:
     load_type: rps # schedule load by defining requests per second
-    schedule: line(10, 300, 60s) const(300, 3m) # starting from 1rps growing linearly to 10rps during 10 minutes
+    schedule: line(10, 100, 3m) const(100, 10m) 
 console:
   enabled: true # enable console output
 telegraf:
