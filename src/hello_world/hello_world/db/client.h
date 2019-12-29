@@ -18,6 +18,11 @@
 
 #include "../models/trashcan.h"
 
+#define LATITUDE_MAX_DIGITS 3
+#define LONGTITUDE_MAX_DIGITS 3
+#define LATITUDE_PADDING 90
+#define LONGTITUDE_PADDING 180
+
 using QueryParam = std::pair<std::string, std::string>;
 using QueryParams = std::vector<QueryParam>;
 
@@ -27,15 +32,15 @@ public:
  
     Client(const std::string &access_key, const std::string &secret_key, const std::string endpoint);
     
-    std::string Add(trashcan trashcan);
-    std::string GetNearest(double lat, double lang);
+    std::string AddOne(Trashcan trashcan);
+    std::string GetNearest(double lat, double lng, double r);
+    std::string PatchOne(cppcms::json::value const &v);
  private:
     std::string MakeRequest(QueryParams query_params);
     
     std::string access_key_;
     std::string secret_key_;
     std::string endpoint_;
-    QueryParams base_params_;
 };
 
 #endif /* client_h */

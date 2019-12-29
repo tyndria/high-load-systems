@@ -10,14 +10,14 @@
 #define trashcans_h
 
 #include <cppcms/application.h>
-#include "../utils/client.h"
+#include "../db/client.h"
 
 class trashcans: public cppcms::application {
 public:
     trashcans(cppcms::service &srv);
-    void get(std::string lat_str, std::string lng_str, std::string r_str);
     void welcome();
-    void add();
+    void list(std::string lat_str, std::string lng_str, std::string r_str);
+    void one();
     void prepend_cors_headers();
 private:
     Client * client;

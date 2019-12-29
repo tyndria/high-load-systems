@@ -12,8 +12,6 @@
 #include <cppcms/url_dispatcher.h>
 #include <cppcms/url_mapper.h>
 
-#include <mapbox/geometry.hpp>
-
 #include <string>
 #include <fstream>
 
@@ -21,7 +19,6 @@
 
 #include "../models/trashcan.h"
 
-using namespace mapbox::geometry;
 
 cppcms::json::value parse_body(const std::pair<void *, size_t> &post_data) {
   cppcms::json::value body;
@@ -39,38 +36,40 @@ cppcms::json::value parse_body(const std::pair<void *, size_t> &post_data) {
 }
 
 trashcans::trashcans(cppcms::service &srv): cppcms::application(srv) {
-    client = new Client("AKIA4A5DKQCYPBQP4SWY", "", "sdb.amazonaws.com");
+    client = new Client("AKIA4A5DKQCYPBQP4SWY", getenv("SECRET_KEY"), "sdb.amazonaws.com");
     
-    dispatcher().assign("/trashcans/lat/(\\d+)/lng/(\\d+)/r/(\\d+)", &trashcans::get, this, 1, 2, 3);
+    dispatcher().assign("/trashcans/lat/(\\d+)/lng/(\\d+)/r/(\\d+)", &trashcans::list, this, 1, 2, 3);
     mapper().assign("get", "/trashcans/lat/{1}/lng/{2}/r/{3}");
 
     dispatcher().assign("/trashcans", &trashcans::welcome, this);
     mapper().assign("trashcans");
     
-    dispatcher().assign("/trashcan", &trashcans::add, this);
+    dispatcher().assign("/trashcan", &trashcans::one, this);
     mapper().assign("trashcan");
     
     mapper().root("/hello_world");
 }
 
-void trashcans::get(std::string lat_str, std::string lng_str, std::string r_str) {
+void trashcans::list(std::string lat_str, std::string lng_str, std::string r_str) {
     prepend_cors_headers();
     
     if (request().request_method() == "GET") {
-        std::string result = client->GetNearest(1, 2);
-            
+        std::string result = client->GetNearest(std::stod(lat_str), std::stod(lng_str), std::stod(r_str));
+       
         response().out() << result;
     }
 };
 
-void trashcans::add() {
+void trashcans::one() {
     prepend_cors_headers();
     
     if (request().request_method() == "POST") {
         cppcms::json::value t = parse_body(request().raw_post_data());
-        
-        std::string result = client->Add(t.get_value<trashcan>());
-            
+        std::string result = client->AddOne(t.get_value<Trashcan>());
+        response().out() << result;
+    } else if (request().request_method() == "PATCH") {
+        cppcms::json::value t = parse_body(request().raw_post_data());
+        std::string result = client->PatchOne(t);
         response().out() << result;
     }
 };
