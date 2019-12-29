@@ -1,8 +1,9 @@
 
 Open questions:
 
-1. Why there is http_0 status and what does it mean in the context of my service
-2. Sometimes I'm getting protocol error
+- Why there is http_0 status and what does it mean in the context of my service
+- Sometimes I'm getting protocol error
+
 
 1. Let's test GET NEAREST request
 
