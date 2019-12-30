@@ -34,7 +34,7 @@ Error `Too many open files` disappeared, but the service anyway crashed on ~130 
 
 3. Decrease rps to 100
 
-Yandex.Tank: https://overload.yandex.net/online/240493
+Yandex.Tank: https://overload.yandex.net/240494
 
 schedule: line(10, 100, 3m) const(100, 10m) 
 
