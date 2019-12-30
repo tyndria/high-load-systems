@@ -44,7 +44,10 @@ trashcans::trashcans(cppcms::service &srv): cppcms::application(srv) {
     dispatcher().assign("/trashcans", &trashcans::welcome, this);
     mapper().assign("trashcans");
     
-    dispatcher().assign("/trashcan", &trashcans::one, this);
+    dispatcher().assign("/trashcan/(.*)", &trashcans::put, this, 1);
+    mapper().assign("put", "/trashcan/{1}");
+    
+    dispatcher().assign("/trashcan", &trashcans::post, this);
     mapper().assign("trashcan");
     
     mapper().root("/hello_world");
@@ -60,16 +63,22 @@ void trashcans::list(std::string lat_str, std::string lng_str) {
     }
 };
 
-void trashcans::one() {
+void trashcans::put(std::string id) {
+    prepend_cors_headers();
+    
+    if (request().request_method() == "PATCH") {
+        cppcms::json::value t = parse_body(request().raw_post_data());
+        std::string result = client->PatchOne(t, id);
+        response().out() << result;
+    }
+}
+
+void trashcans::post() {
     prepend_cors_headers();
     
     if (request().request_method() == "POST") {
         cppcms::json::value t = parse_body(request().raw_post_data());
         std::string result = client->AddOne(t.get_value<Trashcan>());
-        response().out() << result;
-    } else if (request().request_method() == "PATCH") {
-        cppcms::json::value t = parse_body(request().raw_post_data());
-        std::string result = client->PatchOne(t);
         response().out() << result;
     }
 };

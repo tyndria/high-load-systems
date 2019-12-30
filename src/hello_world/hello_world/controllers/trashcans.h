@@ -17,7 +17,8 @@ public:
     trashcans(cppcms::service &srv);
     void welcome();
     void list(std::string lat_str, std::string lng_str);
-    void one();
+    void post();
+    void put(std::string id);
     void prepend_cors_headers();
 private:
     Client * client;

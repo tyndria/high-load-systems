@@ -34,7 +34,7 @@ public:
     
     std::string AddOne(Trashcan trashcan);
     std::string GetNearest(double lat, double lng);
-    std::string PatchOne(cppcms::json::value const &v);
+    std::string PatchOne(cppcms::json::value const &v, std::string id);
  private:
     std::string MakeRequest(QueryParams query_params);
     

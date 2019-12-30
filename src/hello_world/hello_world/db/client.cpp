@@ -17,7 +17,7 @@ Client::Client(const std::string &access_key, const std::string &secret_key, con
     : access_key_(access_key), endpoint_(endpoint), secret_key_(secret_key) {}
 
 
-std::string Client::PatchOne(cppcms::json::value const &v) {
+std::string Client::PatchOne(cppcms::json::value const &v, std::string id) {
     QueryParams params = {
         QueryParam("AWSAccessKeyId", access_key_),
         QueryParam("Action", "PutAttributes"),
@@ -51,7 +51,7 @@ std::string Client::PatchOne(cppcms::json::value const &v) {
     
     params.insert(params.end(), {
         QueryParam("DomainName", "urucca"),
-        QueryParam("ItemName", v.get<std::string>("properties.id")),
+        QueryParam("ItemName", id),
         QueryParam("SignatureMethod", "HmacSHA256"),
         QueryParam("SignatureVersion", "2"),
         QueryParam("Timestamp", timestamp()),
