@@ -3,7 +3,7 @@
 ## 1. Retrieve *the nearest* trashcans.
 
 This request is used by clients and I think that this is the most important and _usable_ request for clients,
-so it's better to __quickly get the data__ rather than waiting for it a lot of time or repeat request.
+so it's better to __quickly get the data__ rather than waiting for it a lot of time.
 
 __+1 for Availability__ + Partition tolerance
 
@@ -12,7 +12,7 @@ __+1 for Availability__ + Partition tolerance
 Let's simplify the task. Let's imagine that trashcan could add only an employee of housing and communal services.
 It means that we won't have any collisions and it will be easy to merge it.
 
-Since the idea is to guarantee availability + partition tolerance we will have a problem:
+If the idea is to guarantee availability + partition tolerance we will have a problem:
 if one person saves trashcan to one machine, another - to another machine,
 users can catch the inconsistency of the data before synchronization while viewing the nearest trashcans.
 
@@ -41,7 +41,7 @@ It means that we will have the only source of this request for a particular tras
 for a particular trashcan. Moreover, an update of one trashcan doesn't influence other trashcans, 
 it means that we have consistency at the level of trashcans.
 
-So we don't have problems with consistency here, but when sth goes wrong inside trashcan logic
+But when sth goes wrong inside trashcan logic
 which is responsible for tracking its state, we could __descrease the availability__,
 since the trashcan is the only one that can do it.
 
@@ -58,43 +58,60 @@ The issue is _HOW TO MERGE DATA_ and _what to do if MACHINES LOST CONNECTION_? W
 
 So the service looks like Availability + Partition tolerance service.
 
-## Cassandra 
-
-__Cassandra isn't good at filtering__?
-
-Let's look at Cassandra database.
-
-### Replication
-
-It has the two main replication strategies are SimpleStrategy and NetworkTopologyStrategy.
-Let's overview the first one.
-
-It includes `replication_factor` defined the number of nodes that should contain a copy of each row.
-Let's decide that we will have __`replication_factor = 3`__.
-
-### Consistency
-
-Cassandra has _consistency levels_ specifying how many of the replicas need to respond in order to consider the operation a success (ONE, TWO, ALL and etc).
-
-_Write operations are always sent to all replicas_, regardless of consistency level. 
-
-Cassandra suggests using this formula `W + R > replication_factor`, where W is the write consistency level, R is the read consistency level.
-
-> If QUORUM is used for both writes and reads, at least one of the replicas is guaranteed to participate in both the write and the read request,
-> which in turn guarantees that the latest write will be read. 
-
 ## Amazon SimpleDB
 
-__Partition__ could me done among _multiple domains_ to parallelize queries and
-have them operate on smaller individual datasets. => Sounds good, data could be splited by place / city / ?.
+__Partition__ will be done among _multiple domains_: in our case, one domain is one city/area.
 
-Data from the same domain will be replicated.
+The main characteristics of the domain:
+- data inside the single domain is __replicated__ -> _availability_ for each domain;
+- we aren't allowed to make cross-domain requests  -> that's ok, we don't need this;
+- write is consistent for each domain.
 
-DB supports two read consistency options: __eventually consistent read__ and consistent read.
+In the unlikely event that one replica fails, SimpleDB can failover to another replica in the system.
+_______
 
-Eventually consistency reads:
-- stale reads possible;
-- lowest read latency;
-- highest read throughput.
+DB supports two read consistency options: __eventually consistent__ read and __consistent__ read.
+
+These are the statements from the documentation:
+> An eventually consistent read __might not reflect the results of a recently completed write__.
+> Consistency across all copies of the data is usually _reached within a second_;
+
+> A consistent read returns a result that reflects all writes that received a successful response prior to the read.
 
 
+So let's review the cases of reading the data:
+
+1. It seems that for __GET__ request of _particular trashcan_ we could use __consistent__ read to see a result that reflects all writes that received a successful response prior to the read. Because we'd like to make this request before changing the trashcan properties.
+
+2. For the __GET__ request of _the list of trashcans_ we could use __eventually consistent__ read, since reaching the trashcan will take some
+time anyway, so it's not essential to get the 100% actual data.
+
+______
+
+
+When the users _update the entity_ simultaneously it's possible to use _optimistic concurrency control_ by maintaining a timestamp attribute as part of an item and by performing a conditional update based on the value of the timestamp.
+
+This mechanism is implemented using __conditional put__.
+
+It means that if the User B changes sth between write and read action
+during User A update, the update of User A will fail.
+
+__However__, I'm not sure that we really need it because trashcan properties have a boolean type.
+
+If the User A wants to change `plastic` property from `false` to `true`, 
+I don't think it's a problem when someone will change it to `true` or `false` before the write action of A, the result will be the same.
+
+So I'm not sure that we should crash users' requests because it seems that this situation is not common for this service and users can't set custom values for trashcan properties.
+
+______
+
+SimpleDB suggests to retry requests on _server errors_.
+
+It's could be problematic for _POST_ requests since
+having two database entities for the one trashcan could be confusing
+for the users.
+
+We could think about the following idea:
+SimpleDB has `itemName` field for each item which should be unique. 
+We can generate itemName value based on the coordinates/area identifier, so there wouldn't be two trashcans inside one area or
+with the same coordinates. It means that we won't be able to add two trashcans with the same coordinates / area identifier.
