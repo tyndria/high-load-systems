@@ -1,0 +1,42 @@
+242 
+PATCH /hello_world/trashcan/trash_030.000000080.000000 HTTP/1.1
+Host: xxxxxxxxx.dev.example.com
+User-Agent: tank
+Accept: */*
+Content-Type: application/json
+Connection: keep-alive
+Content-Length: 33
+
+{{"properties": {"plastic":true}}
+171 
+GET /hello_world/trashcans/lat/5/lng/5 HTTP/1.1
+Host: xxxxxxxxx.dev.example.com
+User-Agent: tank
+Accept: */*
+Content-Type: application/json
+Connection: keep-alive
+
+171 
+GET /hello_world/trashcans/lat/5/lng/5 HTTP/1.1
+Host: xxxxxxxxx.dev.example.com
+User-Agent: tank
+Accept: */*
+Content-Type: application/json
+Connection: keep-alive
+
+171 
+GET /hello_world/trashcans/lat/5/lng/5 HTTP/1.1
+Host: xxxxxxxxx.dev.example.com
+User-Agent: tank
+Accept: */*
+Content-Type: application/json
+Connection: keep-alive
+
+171 
+GET /hello_world/trashcans/lat/5/lng/5 HTTP/1.1
+Host: xxxxxxxxx.dev.example.com
+User-Agent: tank
+Accept: */*
+Content-Type: application/json
+Connection: keep-alive
+

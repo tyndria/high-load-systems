@@ -10,7 +10,9 @@
 		1A170474238EDFD6006726E1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A170473238EDFD6006726E1 /* main.cpp */; };
 		1A47E8C62392C2330085C93A /* libgeojson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A47E8C22392BF3C0085C93A /* libgeojson.a */; };
 		1ACF5E8A2393C6E600FF6864 /* trashcans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1ACF5E892393C6E600FF6864 /* trashcans.cpp */; };
-		1AE237BA23B392CC00FB2371 /* trashcan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AE237B823B392CC00FB2371 /* trashcan.cpp */; };
+		1AE237CC23B66D6D00FB2371 /* hmac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AE237CA23B66D6D00FB2371 /* hmac.cpp */; };
+		1AE237D223B7A6E400FB2371 /* client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AE237D023B7A6E400FB2371 /* client.cpp */; };
+		1AE237D723B87CFC00FB2371 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1AE237D523B87CFC00FB2371 /* utils.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,8 +34,15 @@
 		1A47E8C42392BF510085C93A /* geojson.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; name = geojson.o; path = "../../../../../../usr/local/Cellar/geojson-cpp/build/geojson.o"; sourceTree = "<group>"; };
 		1A47E8C72393C6010085C93A /* trashcans.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trashcans.h; sourceTree = "<group>"; };
 		1ACF5E892393C6E600FF6864 /* trashcans.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trashcans.cpp; sourceTree = "<group>"; };
-		1AE237B823B392CC00FB2371 /* trashcan.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trashcan.cpp; sourceTree = "<group>"; };
 		1AE237B923B392CC00FB2371 /* trashcan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = trashcan.h; sourceTree = "<group>"; };
+		1AE237C023B5ED7A00FB2371 /* libaws-cpp-sdk-core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libaws-cpp-sdk-core.dylib"; path = "../../../../../aws-sdk-cpp-master/aws-cpp-sdk-core/libaws-cpp-sdk-core.dylib"; sourceTree = "<group>"; };
+		1AE237C223B5F03800FB2371 /* libaws-cpp-sdk-sdb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libaws-cpp-sdk-sdb.dylib"; path = "../../../../../aws-sdk-cpp-master/aws-cpp-sdk-sdb/libaws-cpp-sdk-sdb.dylib"; sourceTree = "<group>"; };
+		1AE237CA23B66D6D00FB2371 /* hmac.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = hmac.cpp; sourceTree = "<group>"; };
+		1AE237CB23B66D6D00FB2371 /* hmac.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hmac.h; sourceTree = "<group>"; };
+		1AE237D023B7A6E400FB2371 /* client.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = client.cpp; sourceTree = "<group>"; };
+		1AE237D123B7A6E400FB2371 /* client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
+		1AE237D523B87CFC00FB2371 /* utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = utils.cpp; sourceTree = "<group>"; };
+		1AE237D623B87CFC00FB2371 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,11 +77,11 @@
 		1A170472238EDFD6006726E1 /* hello_world */ = {
 			isa = PBXGroup;
 			children = (
+				1AE237D423B87C5D00FB2371 /* db */,
+				1AE237C923B66D5500FB2371 /* utils */,
+				1AE237BF23B5DDDE00FB2371 /* controllers */,
+				1AE237BE23B3DE7B00FB2371 /* models */,
 				1A170473238EDFD6006726E1 /* main.cpp */,
-				1A47E8C72393C6010085C93A /* trashcans.h */,
-				1ACF5E892393C6E600FF6864 /* trashcans.cpp */,
-				1AE237B823B392CC00FB2371 /* trashcan.cpp */,
-				1AE237B923B392CC00FB2371 /* trashcan.h */,
 			);
 			path = hello_world;
 			sourceTree = "<group>";
@@ -80,10 +89,49 @@
 		1A47E8C12392BF3C0085C93A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1AE237C223B5F03800FB2371 /* libaws-cpp-sdk-sdb.dylib */,
+				1AE237C023B5ED7A00FB2371 /* libaws-cpp-sdk-core.dylib */,
 				1A47E8C42392BF510085C93A /* geojson.o */,
 				1A47E8C22392BF3C0085C93A /* libgeojson.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1AE237BE23B3DE7B00FB2371 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				1AE237B923B392CC00FB2371 /* trashcan.h */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
+		1AE237BF23B5DDDE00FB2371 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1A47E8C72393C6010085C93A /* trashcans.h */,
+				1ACF5E892393C6E600FF6864 /* trashcans.cpp */,
+			);
+			path = controllers;
+			sourceTree = "<group>";
+		};
+		1AE237C923B66D5500FB2371 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				1AE237CA23B66D6D00FB2371 /* hmac.cpp */,
+				1AE237CB23B66D6D00FB2371 /* hmac.h */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+		1AE237D423B87C5D00FB2371 /* db */ = {
+			isa = PBXGroup;
+			children = (
+				1AE237D123B7A6E400FB2371 /* client.h */,
+				1AE237D023B7A6E400FB2371 /* client.cpp */,
+				1AE237D523B87CFC00FB2371 /* utils.cpp */,
+				1AE237D623B87CFC00FB2371 /* utils.h */,
+			);
+			path = db;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -144,8 +192,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A170474238EDFD6006726E1 /* main.cpp in Sources */,
+				1AE237D723B87CFC00FB2371 /* utils.cpp in Sources */,
+				1AE237D223B7A6E400FB2371 /* client.cpp in Sources */,
 				1ACF5E8A2393C6E600FF6864 /* trashcans.cpp in Sources */,
-				1AE237BA23B392CC00FB2371 /* trashcan.cpp in Sources */,
+				1AE237CC23B66D6D00FB2371 /* hmac.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,12 +321,22 @@
 					/usr/local/Cellar/cppcms/1.2.1/include,
 					"/usr/local/Cellar/geometry.hpp-master/include",
 					"/usr/local/Cellar/geojson-cpp/include",
+					/usr/local/Cellar/poco/1.9.4/include,
+					/usr/local/Cellar/cryptopp/8.1.0/include,
+					/usr/local/Cellar/openssl/1.0.2r/include,
 				);
+				LD_RUNPATH_SEARCH_PATHS = /usr/local/Cellar/poco/1.9.4/lib;
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/Cellar/cppcms/1.2.1/lib,
 					"/usr/local/Cellar/geojson-cpp/build",
+					/usr/local/Cellar/poco/1.9.4/lib,
 				);
-				OTHER_LDFLAGS = "-lcppcms";
+				OTHER_LDFLAGS = (
+					"-lcppcms",
+					"-lPocoFoundation",
+					"-lPocoCrypto",
+					"-lPocoNet",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -291,12 +351,22 @@
 					/usr/local/Cellar/cppcms/1.2.1/include,
 					"/usr/local/Cellar/geometry.hpp-master/include",
 					"/usr/local/Cellar/geojson-cpp/include",
+					/usr/local/Cellar/poco/1.9.4/include,
+					/usr/local/Cellar/cryptopp/8.1.0/include,
+					/usr/local/Cellar/openssl/1.0.2r/include,
 				);
+				LD_RUNPATH_SEARCH_PATHS = /usr/local/Cellar/poco/1.9.4/lib;
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/Cellar/cppcms/1.2.1/lib,
 					"/usr/local/Cellar/geojson-cpp/build",
+					/usr/local/Cellar/poco/1.9.4/lib,
 				);
-				OTHER_LDFLAGS = "-lcppcms";
+				OTHER_LDFLAGS = (
+					"-lcppcms",
+					"-lPocoFoundation",
+					"-lPocoCrypto",
+					"-lPocoNet",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

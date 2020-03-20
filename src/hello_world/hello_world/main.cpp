@@ -2,11 +2,18 @@
 #include <cppcms/applications_pool.h>
 
 #include <iostream>
+#include <fstream>
 
-#include "trashcans.h"
+#include "controllers/trashcans.h"
+
 
 
 int main(int argc,char ** argv) {
+    if (getenv("SECRET_KEY")) {
+      std::ifstream arq(getenv("SECRET_KEY"));
+      std::cin.rdbuf(arq.rdbuf());
+    }
+    
     try {
         cppcms::service srv(argc, argv);
         
@@ -18,6 +25,7 @@ int main(int argc,char ** argv) {
     catch (std::exception const &e) {
         std::cerr << e.what() << std::endl;
     }
+    
     return 0;
 }
 

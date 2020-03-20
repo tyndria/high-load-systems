@@ -1,0 +1,11 @@
+{
+    "service" : {
+        "api" : "fastcgi",  
+    	"socket" : "/tmp/hello-fcgi-socket",
+        "worker_threads": 36,
+        "backlog": 1024
+    },
+    "http": {
+        "timeout": 2
+    }
+}
